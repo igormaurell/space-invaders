@@ -1,1 +1,1 @@
-from objects import *
+from game.objects import *

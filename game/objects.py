@@ -1,11 +1,13 @@
 import pygame
+from pygame.sprite import Group, GroupSingle, groupcollide
 
 UP = 0, -1
 DOWN = 0, 1
 
 class GameObject(pygame.sprite.Sprite):
     def __init__(self, key, type, position):
-        self.image = pygame.image.load('data/{}/{}.png'.format(type, key))
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load('data/{}/{}.png'.format(type, key)).convert_alpha()
         self.rect = pygame.Rect(position[0], position[1], self.image.get_rect().size[0], self.image.get_rect().size[1])
     
     def setPosition(self, position):
@@ -22,39 +24,47 @@ class GameObject(pygame.sprite.Sprite):
         GameObject.setPosition(self, (self.rect.x + self.speed[0], self.rect.y + self.speed[1]))
 
 class Shot(GameObject):
-    def __init__(self, key, position, direction, speed, demage = 1):
+    def __init__(self, key, position, direction, speed, damage = 1):
         GameObject.__init__(self, key, 'shots', position)
-        self.demage = demage
+        self.damage = damage
         self.speed = (speed * direction[0], speed * direction[1])
 
         if(direction == DOWN):
-            self.image = pygame.transform.rotate(self.imag, 180)
+            self.image = pygame.transform.rotate(self.image, 180)
 
     def testCollision(self):
         return False 
-    
+
+    def checkUpperBorder(self):
+        if(self.rect.bottom < 0):
+            self.kill()
+
     def do(self):
         self.move()
+        self.checkUpperBorder()
         return not self.testCollision()
 
 class Entity(GameObject):
-    def __init__(self, key, position, speed):
+    def __init__(self, key, position, speed, life = 10):
         GameObject.__init__(self, key, 'entities', position)
         self.abs_speed = speed
         self.speed = (0, 0)
-
-        self.shots = []
+        self.life = life
+        self.shots = Group()
 
     def setSpeed(self, direction):
         self.speed = (direction[0] * self.abs_speed, direction[1] * self.abs_speed)
  
     def shoot(self, shot_speed = 4, shot_direction = (0, -1), shot_key = '1'):
-        temp_image = pygame.image.load('data/shots/{}.png'.format(shot_key))
+        temp_image = pygame.image.load('data/shots/{}.png'.format(shot_key)).convert_alpha()
         position = (self.rect.x + self.rect.width/2 - temp_image.get_rect().width/2, self.rect.y)
         shot = Shot(shot_key, position, shot_direction, shot_speed)
-        self.shots.append(shot)
+        self.shots.add(shot)
 
     def update(self):
+        if self.life == 0:
+            self.kill()
+
         GameObject.update(self)
         for shot in self.shots:
             shot.update()
@@ -78,8 +88,9 @@ class Entity(GameObject):
         return not self.testCollision()
 
 class Player(Entity):
-    def __init__(self, key, position, speed):
+    def __init__(self, key, position, speed, score = 0):
         Entity.__init__(self, key, position, speed)
+        self.score = score
 
     def testCollision(self):
         return False
