@@ -42,9 +42,6 @@ class Shot(GameObject):
         if(direction == DOWN):
             self.image = pygame.transform.rotate(self.image, 180)
 
-    def testCollision(self):
-        return False 
-
     def checkUpperBorder(self):
         if(self.rect.bottom < 0):
             self.kill()
@@ -52,23 +49,25 @@ class Shot(GameObject):
     def do(self):
         self.move()
         self.checkUpperBorder()
-        return not self.testCollision()
 
 class Entity(GameObject):
-    def __init__(self, key, position, speed, life = 10):
+    def __init__(self, key, position, shot_key, shot_speed, life, speed):
         GameObject.__init__(self, key, 'entities', position)
         self.abs_speed = speed
         self.speed = (0, 0)
         self.life = life
         self.shots = Group()
 
+        self.shot_key = shot_key
+        self.shot_speed = shot_speed
+
     def setSpeed(self, direction):
         self.speed = (direction[0] * self.abs_speed, direction[1] * self.abs_speed)
  
-    def shoot(self, shot_speed = 4, shot_direction = (0, -1), shot_key = '1'):
-        temp_image = pygame.image.load('data/shots/{}.png'.format(shot_key)).convert_alpha()
+    def shoot(self):
+        temp_image = pygame.image.load('data/shots/{}.png'.format(self.shot_key)).convert_alpha()
         position = (self.rect.x + self.rect.width/2 - temp_image.get_rect().width/2, self.rect.y)
-        shot = Shot(shot_key, position, shot_direction, shot_speed)
+        shot = Shot(self.shot_key, position, self.shot_direction, self.shot_speed)
         self.shots.add(shot)
 
     def update(self):
@@ -88,26 +87,16 @@ class Entity(GameObject):
         self.move()
         self.speed = (0, 0)
 
-        i = 0
         for shot in self.shots:
-            if(not shot.do()):
-                del shots[i]
-            else:
-                i+= 1
-
-        return not self.testCollision()
+            shot.do()
 
 class Player(Entity):
-    def __init__(self, key, position, speed, score = 0):
-        Entity.__init__(self, key, position, speed)
+    def __init__(self, key, position, shot_key = '1', shot_speed = 4, life = 10, speed = 4, score = 0):
+        Entity.__init__(self, key, position, shot_key, shot_speed, life, speed)
         self.score = score
-
-    def testCollision(self):
-        return False
+        self.shot_direction = (0, -1)
 
 class Monster(Entity):
-    def __init__(self, key, position, speed):
-        Entity.__init__(self, key, position, speed)
-
-    def testCollision(self):
-        return False
+    def __init__(self, key, position, shot_key, shot_speed, life = 10, speed = 2):
+        Entity.__init__(self, key, position, shot_key, shot_speed, life, speed)
+        self.shot_direction = (0, 1)

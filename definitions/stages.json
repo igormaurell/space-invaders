@@ -1,0 +1,29 @@
+{
+	"stage1": {
+		"background": "data/backgrounds/1.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 50],
+		"line1": "222222222",
+		"line2": "111111111",
+		"line3": "111111111",
+		"line4": "111111111"
+	},
+	"stage2": {
+		"background": "data/backgrounds/2.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 50],
+		"line1": "333333",
+		"line2": "222222222",
+		"line3": "111111111",
+		"line4": "111111111"
+	},
+	"stage3": {
+		"background": "data/backgrounds/3.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 50],
+		"line1": "4444",
+		"line2": "333333",
+		"line3": "222222222",
+		"line4": "222222222"
+	}	
+}

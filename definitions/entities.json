@@ -1,0 +1,31 @@
+{
+	"player": {
+		"life": 10,
+		"shot": "1",
+		"shot_speed": 4	
+	},
+	"monster1": {
+		"life": 2,
+		"shot": "3",
+		"shot_speed": 2,
+		"size": [60, 40]
+	},
+	"monster2": {
+		"life": 4,
+		"shot": "2",
+		"shot_speed": 4,
+		"size": [60, 40]
+	},
+	"monster3": {
+		"life": 8,
+		"shot": "4",
+		"shot_speed": 4,
+		"size": [90, 70]
+	},
+	"monster4": {
+		"life": 15,
+		"shot": "5",
+		"shot_speed": 8,
+		"size": [140, 95]
+	}
+}
