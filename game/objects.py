@@ -51,12 +51,13 @@ class Shot(GameObject):
         self.checkUpperBorder()
 
 class Entity(GameObject):
-    def __init__(self, key, position, shot_key, shot_speed, life, speed):
+    def __init__(self, key, position, shot_key, shot_speed, life, demage, speed):
         GameObject.__init__(self, key, 'entities', position)
         self.abs_speed = speed
         self.speed = (0, 0)
         self.life = life
         self.shots = Group()
+        self.demage = demage
 
         self.shot_key = shot_key
         self.shot_speed = shot_speed
@@ -91,12 +92,34 @@ class Entity(GameObject):
             shot.do()
 
 class Player(Entity):
-    def __init__(self, key, position, shot_key = '1', shot_speed = 4, life = 10, speed = 4, score = 0):
-        Entity.__init__(self, key, position, shot_key, shot_speed, life, speed)
+    def __init__(self, key, position, shot_key = '1', shot_speed = 4, life = 10, demage = 2, speed = 4, score = 0, attack_interval=500):
+        Entity.__init__(self, key, position, shot_key, shot_speed, life, demage, speed)
         self.score = score
         self.shot_direction = (0, -1)
+        self.attack_interval = attack_interval
+        self.millis_since_last_attack = attack_interval #can attack in the beginning
+
+    def attemptShoot(self, clock):
+        self.millis_since_last_attack += clock.get_time()
+        if self.millis_since_last_attack >= self.attack_interval:
+            self.shoot()
+            self.millis_since_last_attack = 0
 
 class Monster(Entity):
-    def __init__(self, key, position, shot_key, shot_speed, life = 10, speed = 2):
-        Entity.__init__(self, key, position, shot_key, shot_speed, life, speed)
+    def __init__(self, key, position, shot_key, shot_speed, life = 10, demage = 2, value = 1, speed = 2):
+        Entity.__init__(self, key, position, shot_key, shot_speed, life, demage, speed)
         self.shot_direction = (0, 1)
+        self.value = value
+
+class TempEffect(GameObject):
+    """A GameObject which has a temporary lifespan on the screen"""
+    def __init__(self, key, type, position, lifespan_millis=400):
+        GameObject.__init__(self, key, type, position)
+        self.lifespan_millis = lifespan_millis
+        self.time_elapsed = 0
+
+    def update_time(self, clock):
+        self.time_elapsed += clock.get_time()
+
+    def is_dead(self):
+        return self.time_elapsed >= self.lifespan_millis

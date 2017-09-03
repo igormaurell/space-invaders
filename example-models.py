@@ -9,6 +9,10 @@ from game import *
 WIDTH = 640
 HEIGHT = 480
 
+CLOCK = pygame.time.Clock()
+
+temp_effects = []
+
 def main():
 
     #TODO: Work on a better way to make randomized shots
@@ -41,9 +45,9 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    player.shoot()
+            #elif event.type == pygame.KEYDOWN:
+            #    if event.key == pygame.K_SPACE:
+            #        player.shoot()
 
         #Keyboard hold
         keys = pygame.key.get_pressed()
@@ -54,6 +58,8 @@ def main():
         if keys[K_RIGHT] or keys[K_d]:
             if(not player.touchingRightBorder()):
                 player.setSpeed((1, 0))
+        if keys[K_SPACE]:
+            player.attemptShoot(CLOCK)
         player.do()
 
         #Checking if monsters can be moved
@@ -83,12 +89,16 @@ def main():
             for value in values:
                 value.life -= 1
                 player.score += 1
+                collision_pos = value.getPosition()
+                temp_effects.append(TempEffect("hit_blue", "effects", collision_pos))
 
         #Monsters-Shots collision with player
         for monster in monsters:
             collided = spritecollide(player, monster.shots, True)
             if(len(collided)):
                 player.life -= 1
+                collision_pos = player.getPosition()
+                temp_effects.append(TempEffect("hit_blue", "effects", collision_pos))
 
         #Select random enemy to shot and control time between shots
         indexMonShooting = randint(0, len(monsters))
@@ -100,8 +110,6 @@ def main():
                     framesSinceLastEnemyShot = 0
         else:
             framesSinceLastEnemyShot += 1
-
-
 
         #Updating and rendering objects
 
@@ -122,8 +130,15 @@ def main():
             monster.update()
             monster.draw(screen)
 
+        for i, tmp in enumerate(temp_effects):
+            if(tmp.is_dead()):
+                temp_effects.pop(i)
+            else:
+                tmp.update_time(CLOCK)
+                tmp.draw(screen)
+
         pygame.display.flip()
 
-        pygame.time.Clock().tick(60)
+        CLOCK.tick(60)
 
 main()

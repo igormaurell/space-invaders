@@ -1,6 +1,6 @@
 import pygame
 
-from stage import *
+from game import *
 
 def main():
     WIDTH = 640

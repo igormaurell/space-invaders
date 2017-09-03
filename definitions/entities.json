@@ -2,30 +2,39 @@
 	"player": {
 		"life": 10,
 		"shot": "1",
-		"shot_speed": 4	
+		"shot_speed": 4,
+		"demage": 4	
 	},
 	"monster1": {
-		"life": 2,
+		"life": 4,
 		"shot": "3",
 		"shot_speed": 2,
-		"size": [60, 40]
+		"size": [60, 40],
+		"demage": 1,
+		"value": 1
 	},
 	"monster2": {
-		"life": 4,
+		"life": 8,
 		"shot": "2",
 		"shot_speed": 4,
-		"size": [60, 40]
+		"size": [60, 40],
+		"demage": 2,
+		"value": 2
 	},
 	"monster3": {
-		"life": 8,
+		"life": 10,
 		"shot": "4",
 		"shot_speed": 4,
-		"size": [90, 70]
+		"size": [90, 70],
+		"demage": 4,
+		"value": 4
 	},
 	"monster4": {
 		"life": 15,
 		"shot": "5",
-		"shot_speed": 8,
-		"size": [140, 95]
+		"shot_speed": 6,
+		"size": [140, 95],
+		"demage": 6,
+		"value": 6
 	}
 }

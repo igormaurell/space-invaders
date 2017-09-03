@@ -15,6 +15,7 @@ class Stage:
         self.bg = None
         self.FPS = fps
         self.done = False
+        self.CLOCK = None
         
         self.player = None
         self.monsters = Group()
@@ -29,7 +30,8 @@ class Stage:
         entities_config = json.loads(open('definitions/entities.json').read())
         conf = entities_config['player']
 
-        self.player = Player('player', tuple(config['player_position']), conf['shot'], conf['shot_speed'], conf['life'])
+        self.player = Player('player', tuple(config['player_position']),
+        conf['shot'], conf['shot_speed'], conf['life'], conf['demage'])
      
         y = config['monsters_position'][1]
         for i in range(1, 5):
@@ -38,7 +40,8 @@ class Stage:
             y_M = 0
             for c in line:
                 conf = entities_config['monster' + c] 
-                self.monsters.add(Monster('monster' + c, (x, y), conf['shot'], conf['shot_speed'], conf['life']))
+                self.monsters.add(Monster('monster' + c, (x, y), conf['shot'],
+                conf['shot_speed'], conf['life'], conf['demage'], conf['value']))
                 x += conf['size'][0]
                 if conf['size'][1]>y_M:
                     y_M = conf['size'][1]
@@ -50,24 +53,25 @@ class Stage:
         framesSinceLastEnemyShot = 0
         lastMove = "right"
 
+        self.CLOCK = pygame.time.Clock()
+        temp_effects = []
+
         while not self.done:
                 #Keyboard press and exit events
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit()
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        self.player.shoot()
 
             #Keyboard hold
-            keys = pygame.key.get_pressed()
-
+            keys = pygame.key.get_pressed()    
             if keys[K_LEFT] or keys[K_a]:
                 if(not self.player.touchingLeftBorder()):
                     self.player.setSpeed((-1, 0))
             if keys[K_RIGHT] or keys[K_d]:
                 if(not self.player.touchingRightBorder()):
                     self.player.setSpeed((1, 0))
+            if keys[K_SPACE]:
+                self.player.attemptShoot(self.CLOCK)
             self.player.do()
 
             #Checking if monsters can be moved
@@ -95,14 +99,19 @@ class Stage:
             collided = groupcollide(self.player.shots, self.monsters, True, False)
             for key, values in collided.items():
                 for value in values:
-                    value.life -= 1
-                    self.player.score += 1
+                    value.life -= self.player.demage
+                    if value.life == 0:
+                        self.player.score += value.value
+                    collision_pos = value.getPosition()
+                    temp_effects.append(TempEffect("hit_blue", "effects", collision_pos))
 
             #Monsters-Shots collision with player
             for monster in self.monsters:
                 collided = spritecollide(self.player, monster.shots, True)
                 if(len(collided)):
-                    self.player.life -= 1
+                    self.player.life -= monster.demage
+                    collision_pos = self.player.getPosition()
+                    temp_effects.append(TempEffect("hit_blue", "effects", collision_pos))
 
             #Select random enemy to shot and control time between shots
             indexMonShooting = randint(0, len(self.monsters))
@@ -114,8 +123,6 @@ class Stage:
                         framesSinceLastEnemyShot = 0
             else:
                 framesSinceLastEnemyShot += 1
-
-
 
             #Updating and rendering objects
 
@@ -136,7 +143,21 @@ class Stage:
                 monster.update()
                 monster.draw(self.screen)
 
+            for i, tmp in enumerate(temp_effects):
+                if(tmp.is_dead()):
+                    temp_effects.pop(i)
+                else:
+                    tmp.update_time(self.CLOCK)
+                    tmp.draw(self.screen)
+
             pygame.display.flip()
 
-            pygame.time.Clock().tick(self.FPS)
+            if self.player.life <= 0:
+                print ("Perdeu! SCORE: " + str(self.player.score))
+                self.done = True
+            elif len(self.monsters) <= 0:
+                self.done = True
+
+
+            self.CLOCK.tick(self.FPS)
 
