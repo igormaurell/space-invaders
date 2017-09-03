@@ -98,12 +98,19 @@ class Entity(GameObject):
         return not self.testCollision()
 
 class Player(Entity):
-    def __init__(self, key, position, speed, score = 0):
+    def __init__(self, key, position, speed, score = 0, attack_interval=500):
         Entity.__init__(self, key, position, speed)
         self.score = score
+        self.attack_interval = attack_interval
+        self.millis_since_last_attack = attack_interval #can attack in the beginning
 
     def testCollision(self):
         return False
+    def attemptShoot(self, clock, shot_speed = 4, shot_direction = (0, -1), shot_key = '1'):
+        self.millis_since_last_attack += clock.get_time()
+        if self.millis_since_last_attack >= self.attack_interval:
+            self.shoot(shot_speed, shot_direction, shot_key)
+            self.millis_since_last_attack = 0
 
 class Monster(Entity):
     def __init__(self, key, position, speed):

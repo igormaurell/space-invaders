@@ -9,6 +9,8 @@ from game import *
 WIDTH = 640
 HEIGHT = 480
 
+CLOCK = pygame.time.Clock()
+
 def main():
 
     #TODO: Work on a better way to make randomized shots
@@ -41,9 +43,9 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    player.shoot()
+            #elif event.type == pygame.KEYDOWN:
+            #    if event.key == pygame.K_SPACE:
+            #        player.shoot()
 
         #Keyboard hold
         keys = pygame.key.get_pressed()
@@ -54,6 +56,8 @@ def main():
         if keys[K_RIGHT] or keys[K_d]:
             if(not player.touchingRightBorder()):
                 player.setSpeed((1, 0))
+        if keys[K_SPACE]:
+            player.attemptShoot(CLOCK)
         player.do()
 
         #Checking if monsters can be moved
@@ -124,6 +128,6 @@ def main():
 
         pygame.display.flip()
 
-        pygame.time.Clock().tick(60)
+        CLOCK.tick(60)
 
 main()
