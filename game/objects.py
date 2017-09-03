@@ -118,3 +118,16 @@ class Monster(Entity):
 
     def testCollision(self):
         return False
+
+class TempEffect(GameObject):
+    """A GameObject which has a temporary lifespan on the screen"""
+    def __init__(self, key, type, position, lifespan_millis=400):
+        GameObject.__init__(self, key, type, position)
+        self.lifespan_millis = lifespan_millis
+        self.time_elapsed = 0
+
+    def update_time(self, clock):
+        self.time_elapsed += clock.get_time()
+
+    def is_dead(self):
+        return self.time_elapsed >= self.lifespan_millis
