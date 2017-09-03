@@ -71,7 +71,7 @@ class Stage:
                 if(not self.player.touchingRightBorder()):
                     self.player.setSpeed((1, 0))
             if keys[K_SPACE]:
-                self.player.attemptShoot(self.CLOCK)
+                self.player.attempt_shoot(self.CLOCK)
             self.player.do()
 
             #Checking if monsters can be moved
@@ -135,6 +135,7 @@ class Stage:
 
 
             self.player.update()
+            self.player.update_attack_clock(self.CLOCK)
             if(self.player.life > 0):
                 self.player.draw(self.screen)
 

@@ -99,8 +99,10 @@ class Player(Entity):
         self.attack_interval = attack_interval
         self.millis_since_last_attack = attack_interval #can attack in the beginning
 
-    def attemptShoot(self, clock):
+    def update_attack_clock(self, clock):
         self.millis_since_last_attack += clock.get_time()
+
+    def attempt_shoot(self, clock):
         if self.millis_since_last_attack >= self.attack_interval:
             self.shoot()
             self.millis_since_last_attack = 0

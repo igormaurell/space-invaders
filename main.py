@@ -12,7 +12,7 @@ def main():
     screen = pygame.display.set_mode(screen_size)
 
     pygame.display.set_caption("Space Invaders")
-	
+
     stage = Stage('stage3', screen, 60)
     stage.start()
 
