@@ -42,13 +42,13 @@ class Shot(GameObject):
         if(direction == DOWN):
             self.image = pygame.transform.rotate(self.image, 180)
 
-    def checkUpperBorder(self):
-        if(self.rect.bottom < 0):
+    def checkOutOfBorder(self):
+        if(self.rect.bottom < 0 or self.rect.top > 480):
             self.kill()
 
     def do(self):
         self.move()
-        self.checkUpperBorder()
+        self.checkOutOfBorder()
 
 class Entity(GameObject):
     def __init__(self, key, position, shot_key, shot_speed, life, demage, speed):
@@ -72,7 +72,7 @@ class Entity(GameObject):
         self.shots.add(shot)
 
     def update(self):
-        if self.life == 0:
+        if self.life <= 0:
             self.kill()
 
         GameObject.update(self)
