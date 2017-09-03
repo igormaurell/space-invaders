@@ -13,7 +13,17 @@ class GameObject(pygame.sprite.Sprite):
     def setPosition(self, position):
         self.rect.x = position[0]
         self.rect.y = position[1]
-    
+
+    def touchingRightBorder(self):
+        if(self.rect.right >= 640):
+            return True
+        return False
+
+    def touchingLeftBorder(self):    
+        if(self.rect.left <= 0):
+            return True
+        return False
+
     def getPosition(self):
         return (self.rect.x, self.rect.y)
 

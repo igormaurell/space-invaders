@@ -10,6 +10,12 @@ WIDTH = 640
 HEIGHT = 480
 
 def main():
+
+    #TODO: Work on a better way to make randomized shots
+    framesSinceLastEnemyShot = 0
+    lastMove = ""
+
+    #Initialinz pygame and creating the main surface
     pygame.init()
 
     screen_size = (WIDTH, HEIGHT)
@@ -17,20 +23,21 @@ def main():
 
     pygame.display.set_caption("Space Invaders")
 
+    #Creating objects of the stage
+    #TODO: Include a stage reader from config files
     player = Player('player', (200, 440), 4)
 
-    monstersShots = Group()
     monsters = Group()
-    for x in range(0, 640, 64):
+    for x in range(0, 640, 128):
         monsters.add(Monster('monster1', (x, 100), 2))
 
-    countSinceLastEnemyShot = 0
-
+    #Setting the background
     bg = pygame.image.load('data/backgrounds/3.png').convert_alpha()
     screen.blit(bg, (0, 0))
 
-    done = False
     while 1:
+
+        #Keyboard press and exit events
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
@@ -38,23 +45,37 @@ def main():
                 if event.key == pygame.K_SPACE:
                     player.shoot()
 
+        #Keyboard hold
         keys = pygame.key.get_pressed()
 
         if keys[K_LEFT] or keys[K_a]:
-            player.setSpeed((-1, 0))
+            if(not player.touchingLeftBorder()):
+                player.setSpeed((-1, 0))
         if keys[K_RIGHT] or keys[K_d]:
-            player.setSpeed((1, 0))
+            if(not player.touchingRightBorder()):
+                player.setSpeed((1, 0))
         player.do()
 
+        #Checking if monsters can be moved
+        canMoveLeft = canMoveRight = True
         for monster in monsters:
+            if(monster.touchingLeftBorder()):
+                lastMove = "left"
+                canMoveLeft = False
+            if(monster.touchingRightBorder()):
+                lastMove = "right"
+                canMoveRight = False
+
+        if(canMoveRight and lastMove == "left"):
+            monsSpeed = (1,0)
+        elif(canMoveLeft and lastMove == "right"):
+            monsSpeed = (-1,0)
+        else:
+            monsSpeed = (0,0)
+
+        for monster in monsters:
+            monster.setSpeed(monsSpeed)
             monster.do()
-
-        map = pygame.sprite.RenderUpdates()
-        
-        screen.blit(bg, (0, 0))
-
-        map.update()
-        map.draw(screen)
 
         #Player-Shot collision with monster
         collided = groupcollide(player.shots, monsters, True, False)
@@ -64,22 +85,38 @@ def main():
                 player.score += 1
 
         #Monsters-Shots collision with player
-        collided = spritecollide(player, monstersShots, True)
-        if(collided != None):
-            player.life -= 1
+        for monster in monsters:
+            collided = spritecollide(player, monster.shots, True)
+            if(len(collided)):
+                player.life -= 1
 
-        player.update()
-        player.draw(screen)
-
-        #Select random enemy to shot
+        #Select random enemy to shot and control time between shots
         indexMonShooting = randint(0, len(monsters))
-        if(countSinceLastEnemyShot > 30):
+        if((framesSinceLastEnemyShot > 30 and len(monsters) > 4) or \
+           (framesSinceLastEnemyShot > 60)):
             for i, monster in enumerate(monsters):
                 if(i == indexMonShooting):
                     monster.shoot(4, (0, 1), '3')
-                    countSinceLastEnemyShot = 0
+                    framesSinceLastEnemyShot = 0
         else:
-            countSinceLastEnemyShot += 1
+            framesSinceLastEnemyShot += 1
+
+
+
+        #Updating and rendering objects
+
+        map = pygame.sprite.RenderUpdates()
+        
+        screen.blit(bg, (0, 0))
+
+        map.update()
+        map.draw(screen)
+
+
+        player.update()
+        if(player.life > 0):
+            player.draw(screen)
+
 
         for monster in monsters:
             monster.update()
