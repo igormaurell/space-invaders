@@ -16,7 +16,7 @@ def main():
     menu = GameMenu('Space Invaders', screen, 60)
     sequence = menu.run()
     if sequence == 1:
-        stage = Stage(screen, 60)
+        stage = Stage(screen, 60, key=10)
         stage.start()
     else:
         print("Records aqui!")
