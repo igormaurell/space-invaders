@@ -25,9 +25,10 @@ class Stage:
         
         self.player = None
         self.monsters = Group()
+
+        playBackgroundMusic()
     
     def start(self):
-        playBackgroundMusic()
 
         config = json.loads(open('definitions/stages.json').read())
         config = config['stage' + str(self.key)]

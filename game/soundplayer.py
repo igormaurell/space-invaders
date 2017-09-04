@@ -16,3 +16,9 @@ def playSoundPlayerShot():
     tempEffect = pygame.mixer.Sound("data/sound/playerShot.wav")
     tempEffect.set_volume(0.5)
     tempEffect.play()
+
+def playSoundClick():
+    tempEffect = pygame.mixer.Sound("data/sound/click.wav")
+    tempEffect.set_volume(1)
+    tempEffect.play()
+    pygame.time.delay(750)

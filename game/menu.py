@@ -1,6 +1,8 @@
 import pygame
 import time
 
+from game.soundplayer import *
+
 class GameMenu:
     def __init__(self, title, screen, fps = 50):
         self.running = True
@@ -61,8 +63,10 @@ class GameMenu:
             self.button("Quit", 245, 310, 150, 50, rect, rect_activate, options, "3")
             
             if self.button_play == True:
+                playSoundClick()
                 return 1
             elif self.button_records == True:
+                playSoundClick()
                 return 2
             elif self.button_quit == True:
                 pygame.quit()
