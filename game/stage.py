@@ -12,7 +12,7 @@ MAX_STAGE = 10
 MONSTERS_SPEED = 2
 
 class Stage:
-    def __init__(self, screen, fps = 60, key = 10):
+    def __init__(self, screen, fps = 60, key = 1):
         self.key = key
         self.json_data = None
         self.screen = screen
