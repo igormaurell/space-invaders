@@ -12,7 +12,7 @@ MAX_STAGE = 10
 MONSTERS_SPEED = 2
 
 class Stage:
-    def __init__(self, screen, fps = 60, key = 1):
+    def __init__(self, screen, fps = 60, key = 10):
         self.key = key
         self.json_data = None
         self.screen = screen
@@ -126,7 +126,7 @@ class Stage:
             for key, values in collided.items():
                 for value in values:
                     value.life -= self.player.demage
-                    if value.life == 0:
+                    if value.life <= 0:
                         self.player.score += value.value
                     collision_pos = value.getPosition()
                     self.temp_effects.append(TempEffect("hit_blue", "effects", collision_pos))
@@ -150,15 +150,17 @@ class Stage:
             else:
                 framesSinceLastEnemyShot += 1
 
-            #Updating and rendering objects
-            self.renderObjects()
-
             if self.player.life <= 0:
-                print ("Perdeu! SCORE: " + str(self.player.score))
                 self.done = True
+
+                text = "You lost!  Score: " + str(self.player.score)
+                self.showText(text)
                 playSoundDeath()
             elif len(self.monsters) <= 0:
                 self.done = True
+
+            #Updating and rendering objects
+            self.renderObjects()
 
 
             self.CLOCK.tick(self.FPS)
@@ -169,7 +171,18 @@ class Stage:
                 self.key += 1
                 self.start()
             else:
-                print ("Ganhou! SCORE: " + str(self.player.score))
+                text = "You won!  Score: " + str(self.player.score)
+                self.showText(text)
+                pygame.time.delay(2000)
+        
+
+    def showText(self, text):
+        font = pygame.font.Font('freesansbold.ttf', 40)
+        textSurface = font.render(text, True, (0,0,0))
+        dest = textSurface.get_rect()
+        dest.center = (320,240)
+        self.screen.blit(textSurface, dest)
+        pygame.display.flip()
 
     
     def renderObjects(self):
