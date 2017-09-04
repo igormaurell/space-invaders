@@ -7,7 +7,8 @@ from random import randint
 from game import *
 import json
 
-MAX_STAGE = 3
+MAX_STAGE = 10
+MONSTERS_SPEED = 2
 
 class Stage:
     def __init__(self, screen, fps = 60, key = 1):
@@ -37,7 +38,8 @@ class Stage:
         self.player = Player('player', tuple(config['player_position']),
         conf['shot'], conf['shot_speed'], conf['life'], conf['demage'])
      
-        y = config['monsters_position'][1] - 180
+        #botando os monstros a partir do y = 0
+        y = 0
         for i in range(1, 5):
             line = config['line' + str(i)]
             x = config['monsters_position'][0]
@@ -45,15 +47,20 @@ class Stage:
             for c in line:
                 conf = entities_config['monster' + c] 
                 self.monsters.add(Monster('monster' + c, (x, y), conf['shot'],
-                conf['shot_speed'], conf['life'], conf['demage'], conf['value']))
+                conf['shot_speed'], conf['life'], conf['demage'], conf['value'], MONSTERS_SPEED))
                 x += conf['size'][0]
-                if conf['size'][1]>y_M:
+                if conf['size'][1] > y_M:
                     y_M = conf['size'][1]
             y += y_M
+		
+        #subindo os monstros para fazer animacao de descida, onde y = altura das 4 linhas
+        for monster in self.monsters:
+		    monster.rect.y -= y
 
+        #descendo eles com velocidade normal para ficarem em sua posicao padrao
         yMovToPos = 0
         while True:
-            if yMovToPos < 100:
+            if yMovToPos < (y + config['monsters_position'][1])/MONSTERS_SPEED:
                 for monster in self.monsters:
                     monster.setSpeed((0,1))
                     monster.do()

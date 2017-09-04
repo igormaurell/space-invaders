@@ -2,8 +2,8 @@
 	"stage1": {
 		"background": "data/backgrounds/1.png",
 		"player_position": [200, 440],
-		"monsters_position": [60, 50],
-		"line1": "222222222",
+		"monsters_position": [60, 20],
+		"line1": "111111111",
 		"line2": "111111111",
 		"line3": "111111111",
 		"line4": "111111111"
@@ -11,19 +11,82 @@
 	"stage2": {
 		"background": "data/backgrounds/2.png",
 		"player_position": [200, 440],
-		"monsters_position": [60, 50],
-		"line1": "333333",
-		"line2": "222222222",
+		"monsters_position": [60, 20],
+		"line1": "222222222",
+		"line2": "111111111",
 		"line3": "111111111",
 		"line4": "111111111"
 	},
 	"stage3": {
 		"background": "data/backgrounds/3.png",
 		"player_position": [200, 440],
-		"monsters_position": [60, 50],
+		"monsters_position": [60, 20],
+		"line1": "222222222",
+		"line2": "222222222",
+		"line3": "111111111",
+		"line4": "111111111"
+	},
+	"stage4": {
+		"background": "data/backgrounds/1.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 20],
+		"line1": "22233222",
+		"line2": "222222222",
+		"line3": "111111111",
+		"line4": "111111111"
+	},
+	"stage5": {
+		"background": "data/backgrounds/2.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 20],
+		"line1": "22233222",
+		"line2": "222222222",
+		"line3": "222222222",
+		"line4": "222222222"
+	},
+	"stage6": {
+		"background": "data/backgrounds/3.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 20],
+		"line1": "333333",
+		"line2": "222222222",
+		"line3": "222222222",
+		"line4": "222222222"
+	},
+	"stage7": {
+		"background": "data/backgrounds/1.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 20],
+		"line1": "333333",
+		"line2": "333333",
+		"line3": "222222222",
+		"line4": "222222222"
+	},
+	"stage8": {
+		"background": "data/backgrounds/2.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 20],
 		"line1": "4444",
 		"line2": "333333",
 		"line3": "222222222",
 		"line4": "222222222"
+	},
+	"stage9": {
+		"background": "data/backgrounds/3.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 20],
+		"line1": "4444",
+		"line2": "333333",
+		"line3": "333333",
+		"line4": "222222222"
+	},
+	"stage10": {
+		"background": "data/backgrounds/1.png",
+		"player_position": [200, 440],
+		"monsters_position": [60, 20],
+		"line1": "4444",
+		"line2": "4444",
+		"line3": "333333",
+		"line4": "333333"
 	}	
 }
