@@ -4,6 +4,7 @@ from pygame.sprite import Group, groupcollide, spritecollide
 
 from random import randint
 
+from game.soundplayer import *
 from game import *
 import json
 
@@ -26,6 +27,8 @@ class Stage:
         self.monsters = Group()
     
     def start(self):
+        playBackgroundMusic()
+
         config = json.loads(open('definitions/stages.json').read())
         config = config['stage' + str(self.key)]
 
@@ -52,10 +55,10 @@ class Stage:
                 if conf['size'][1] > y_M:
                     y_M = conf['size'][1]
             y += y_M
-		
+
         #subindo os monstros para fazer animacao de descida, onde y = altura das 4 linhas
         for monster in self.monsters:
-		    monster.rect.y -= y
+            monster.rect.y -= y
 
         #descendo eles com velocidade normal para ficarem em sua posicao padrao
         yMovToPos = 0
@@ -92,7 +95,8 @@ class Stage:
                 if(not self.player.touchingRightBorder()):
                     self.player.setSpeed((1, 0))
             if keys[K_SPACE]:
-                self.player.attempt_shoot(self.CLOCK)
+                if(self.player.attempt_shoot(self.CLOCK)):
+                    playSoundPlayerShot()
             self.player.do()
 
             #Checking if monsters can be moved
@@ -151,6 +155,7 @@ class Stage:
             if self.player.life <= 0:
                 print ("Perdeu! SCORE: " + str(self.player.score))
                 self.done = True
+                playSoundDeath()
             elif len(self.monsters) <= 0:
                 self.done = True
 
