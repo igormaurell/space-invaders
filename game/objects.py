@@ -125,3 +125,18 @@ class TempEffect(GameObject):
 
     def is_dead(self):
         return self.time_elapsed >= self.lifespan_millis
+
+class HealthBar(pygame.sprite.Sprite):
+    def __init__(self, player):
+        self.player = player
+        self.full_health = self.player.life
+        pygame.sprite.Sprite.__init__(self)
+        self.buffer = pygame.Rect(20, 20, 600, 40)
+        self.border = self.buffer.copy().inflate(2, 3)
+        self.border.x = 18
+        self.border.y = 18
+
+    def draw(self, surface):
+        self.buffer.width = (600*self.player.life)/self.full_health
+        pygame.draw.rect(surface, (192, 192, 192), self.border, 2)
+        pygame.draw.rect(surface, (0, 255, 0), self.buffer)

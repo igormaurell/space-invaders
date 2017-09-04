@@ -22,6 +22,7 @@ class Stage:
         self.CLOCK = pygame.time.Clock()
         
         self.player = None
+        self.health_bar = None
         self.monsters = Group()
     
     def start(self):
@@ -36,6 +37,8 @@ class Stage:
 
         self.player = Player('player', tuple(config['player_position']),
         conf['shot'], conf['shot_speed'], conf['life'], conf['demage'])
+
+        self.health_bar = HealthBar(self.player)
      
         y = config['monsters_position'][1] - 180
         for i in range(1, 5):
@@ -162,11 +165,12 @@ class Stage:
     def renderObjects(self):
         self.map = pygame.sprite.RenderUpdates()
         
-        self.screen.blit(self.bg, (0, 0))
+        self.screen.blit(self.bg, (0, 0)) 
 
         self.map.update()
         self.map.draw(self.screen)
 
+        self.health_bar.draw(self.screen)
 
         self.player.update()
         self.player.update_attack_clock(self.CLOCK)
