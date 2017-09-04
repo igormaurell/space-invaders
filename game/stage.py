@@ -30,7 +30,6 @@ class Stage:
         playBackgroundMusic()
     
     def start(self):
-
         config = json.loads(open('definitions/stages.json').read())
         config = config['stage' + str(self.key)]
 
@@ -41,9 +40,10 @@ class Stage:
         conf = entities_config['player']
 
         self.player = Player('player', tuple(config['player_position']),
-        conf['shot'], conf['shot_speed'], conf['life'], conf['demage'])
+        conf['shot'], conf['shot_speed'], conf['life'], conf['damage'])
 
-        self.health_bar = HealthBar(self.player)
+        if self.health_bar == None:
+            self.health_bar = HealthBar(self.player)
      
         #botando os monstros a partir do y = 0
         y = 0
@@ -54,7 +54,7 @@ class Stage:
             for c in line:
                 conf = entities_config['monster' + c] 
                 self.monsters.add(Monster('monster' + c, (x, y), conf['shot'],
-                conf['shot_speed'], conf['life'], conf['demage'], conf['value'], MONSTERS_SPEED))
+                conf['shot_speed'], conf['life'], conf['damage'], conf['value'], MONSTERS_SPEED))
                 x += conf['size'][0]
                 if conf['size'][1] > y_M:
                     y_M = conf['size'][1]
@@ -74,9 +74,8 @@ class Stage:
                 yMovToPos += 1
             else:
                 break
-            self.renderObjects()
+            self.renderObjects(True)
             self.CLOCK.tick(self.FPS)
-
         self.run()
 
     def run(self):
@@ -128,7 +127,7 @@ class Stage:
             collided = groupcollide(self.player.shots, self.monsters, True, False)
             for key, values in collided.items():
                 for value in values:
-                    value.life -= self.player.demage
+                    value.life -= self.player.damage
                     if value.life <= 0:
                         self.player.score += value.value
                     collision_pos = value.getPosition()
@@ -138,7 +137,7 @@ class Stage:
             for monster in self.monsters:
                 collided = spritecollide(self.player, monster.shots, True)
                 if(len(collided)):
-                    self.player.life -= monster.demage
+                    self.player.life -= monster.damage
                     collision_pos = self.player.getPosition()
                     self.temp_effects.append(TempEffect("hit_blue", "effects", collision_pos))
 
@@ -165,7 +164,6 @@ class Stage:
             #Updating and rendering objects
             self.renderObjects()
 
-
             self.CLOCK.tick(self.FPS)
 
         if(len(self.monsters) <= 0):
@@ -188,7 +186,7 @@ class Stage:
         pygame.display.flip()
 
     
-    def renderObjects(self):
+    def renderObjects(self, starting = False):
         self.map = pygame.sprite.RenderUpdates()
         
         self.screen.blit(self.bg, (0, 0)) 
@@ -196,7 +194,8 @@ class Stage:
         self.map.update()
         self.map.draw(self.screen)
 
-        self.health_bar.draw(self.screen)
+        if not starting:
+            self.health_bar.draw(self.screen)
 
         self.player.update()
         self.player.update_attack_clock(self.CLOCK)

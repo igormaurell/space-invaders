@@ -17,7 +17,6 @@ def main():
     sequence = menu.run()
     if sequence == 1:
         stage = Stage(screen, 60)
-
         stage.start()
     else:
         print("Records aqui!")
