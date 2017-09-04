@@ -92,7 +92,7 @@ class Entity(GameObject):
             shot.do()
 
 class Player(Entity):
-    def __init__(self, key, position, shot_key = '1', shot_speed = 4, life = 10, demage = 2, speed = 4, score = 0, attack_interval=500):
+    def __init__(self, key, position, shot_key = '1', shot_speed = 4, life = 10, demage = 45, speed = 4, score = 0, attack_interval=500):
         Entity.__init__(self, key, position, shot_key, shot_speed, life, demage, speed)
         self.score = score
         self.shot_direction = (0, -1)
@@ -106,6 +106,7 @@ class Player(Entity):
         if self.millis_since_last_attack >= self.attack_interval:
             self.shoot()
             self.millis_since_last_attack = 0
+            return True
 
 class Monster(Entity):
     def __init__(self, key, position, shot_key, shot_speed, life = 10, demage = 2, value = 1, speed = 2):
