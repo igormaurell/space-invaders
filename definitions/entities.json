@@ -26,31 +26,31 @@
 		"shot": "4",
 		"shot_speed": 4,
 		"size": [90, 70],
-		"damage": 4,
+		"damage": 6,
 		"value": 4
 	},
 	"monster4":{
 		"life": 12,
 		"shot": "5",
-		"shot_speed": 4,
+		"shot_speed": 5,
 		"size": [90, 70],
-		"damage": 6,
+		"damage": 8,
 		"value": 4
 	},
 	"monster5": {
 		"life": 16,
 		"shot": "6",
-		"shot_speed": 5,
+		"shot_speed": 6,
 		"size": [140, 95],
-		"damage": 8,
+		"damage": 10,
 		"value": 6
 	},
 	"monster6": {
 		"life": 20,
 		"shot": "7",
-		"shot_speed": 6,
+		"shot_speed": 7,
 		"size": [140, 95],
-		"damage": 10,
+		"damage": 12,
 		"value": 6
 	}
 }

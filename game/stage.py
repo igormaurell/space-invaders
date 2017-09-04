@@ -39,11 +39,16 @@ class Stage:
         entities_config = json.loads(open('definitions/entities.json').read())
         conf = entities_config['player']
 
-        self.player = Player('player', tuple(config['player_position']),
-        conf['shot'], conf['shot_speed'], conf['life'], conf['damage'])
+        #gambiarra
+        if self.player == None:
+            self.player = Player('player', tuple(config['player_position']),
+            conf['shot'], conf['shot_speed'], conf['life'], conf['damage'])
+        else:
+            self.player.shots = Group()
 
         if self.health_bar == None:
             self.health_bar = HealthBar(self.player)
+        #fim gambiarra
      
         #botando os monstros a partir do y = 0
         y = 0

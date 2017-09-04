@@ -92,7 +92,7 @@ class Entity(GameObject):
             shot.do()
 
 class Player(Entity):
-    def __init__(self, key, position, shot_key = '1', shot_speed = 4, life = 10, damage = 45, speed = 4, score = 0, attack_interval=500):
+    def __init__(self, key, position, shot_key = '1', shot_speed = 4, life = 10, damage = 4, speed = 3, score = 0, attack_interval=500):
         Entity.__init__(self, key, position, shot_key, shot_speed, life, damage, speed)
         self.score = score
         self.shot_direction = (0, -1)
