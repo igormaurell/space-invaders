@@ -3,6 +3,7 @@ import time
 
 from game.soundplayer import *
 
+
 class GameMenu:
     def __init__(self, title, screen, fps = 50):
         self.running = True
@@ -11,9 +12,11 @@ class GameMenu:
         self.FPS = fps
         self.CLOCK = None
         self.bg = None
+        self.logo = None
         self.button_play = False
         self.button_records = False
         self.button_quit = False
+        playBackgroundMusic()
 
 
     def button(self, title, x, y, w, h, i, a, color, action = None):
@@ -31,7 +34,7 @@ class GameMenu:
         else:
             pygame.draw.rect(self.screen, i, (x,y,w,h))
 
-        smallText = pygame.font.Font('freesansbold.ttf', 22)
+        smallText = pygame.font.Font('freesansbold.ttf', 19)
         TextSurf, TextRect = self.text_objects(title, smallText, color)
         TextRect.center = ((x+(w/2)),(y+(h/2)))
         self.screen.blit(TextSurf, TextRect)
@@ -44,23 +47,21 @@ class GameMenu:
     	self.CLOCK = pygame.time.Clock()
     	self.bg = pygame.image.load('data/backgrounds/1.png').convert_alpha()
     	self.screen.blit(self.bg, (0, 0))
+        self.logo = pygame.image.load('data/backgrounds/logo.png').convert_alpha()
+        self.screen.blit(self.logo, (160, 45))
     	while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()
 
-            largeText = pygame.font.Font('freesansbold.ttf',53)
             banner = (95,0,0)
             options = (240,240,240)
             rect_activate = (60,60,60)
             rect = (30, 30, 30)	
-            TextSurf, TextRect = self.text_objects(self.title, largeText, banner)
-            TextRect.center = (320,130)
-            self.screen.blit(TextSurf, TextRect)
 
-            self.button("Start", 245, 190, 150, 50, rect, rect_activate, options, "1")
-            self.button("Records", 245, 250, 150, 50, rect, rect_activate, options, "2")
-            self.button("Quit", 245, 310, 150, 50, rect, rect_activate, options, "3")
+            self.button("Start", 257, 230, 130, 40, rect, rect_activate, options, "1")
+            self.button("Records", 257, 280, 130, 40, rect, rect_activate, options, "2")
+            self.button("Quit", 257, 330, 130, 40, rect, rect_activate, options, "3")
             
             if self.button_play == True:
                 playSoundClick()
